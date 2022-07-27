@@ -102,9 +102,9 @@ class SongSquare : ObservableObject {
     }
     
     func updatePosition(translation: CGSize, screenSize: CGSize, sensitivity: CGFloat = 1.0) {
-        print("Square Pos: (\(self.x), \(self.y))")
-        print("Translation: (\(translation.width), \(translation.height))")
-        print("Screen Size: (\(screenSize.width),\(screenSize.height))")
+//        print("Square Pos: (\(self.x), \(self.y))")
+//        print("Translation: (\(translation.width), \(translation.height))")
+//        print("Screen Size: (\(screenSize.width),\(screenSize.height))")
         self.x += translation.width * sensitivity
         self.y += translation.height * sensitivity
         self.color = .green
@@ -161,6 +161,8 @@ struct PracticeView: View {
     @State var location = CGPoint.zero
     @StateObject var children = SongSpace()
     @State var geoPos: CGSize = CGSize.zero
+    @State var lock = false
+    @State var prevTrans = CGSize(width: 0, height: 0)
     
     var body: some View {
         ZStack {
@@ -177,14 +179,19 @@ struct PracticeView: View {
                 .onAppear {
                     self.geoPos = globPos.size
                 }
-            }
+            }.coordinateSpace(name: "GeoRead")
             .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight/2, alignment: .center)
             .background(Color.brown)
             .gesture(
-                DragGesture()
+                DragGesture(minimumDistance: 40.0, coordinateSpace: CoordinateSpace.local)
                     .onChanged({ offsetChange in
+                        print("ON CHANGED")
+                        print("Translation Change: (\(offsetChange.translation.width), \(offsetChange.translation.height))")
+                        print("Position Change: (\(offsetChange.location.x), \(offsetChange.location.y))")
+                        print("")
+                        var change = CGSize(width: offsetChange.translation.width - prevTrans.width, height: offsetChange.translation.height - prevTrans.height)
                         for id in self.children.squares.keys {
-                            print("ID: \(id)")
+                            //print("ID: \(id)")
                             if self.children.squares[id]!.outsideBounds(dim: self.geoPos) {
                                 let oldSquare = self.children.squares.removeValue(forKey: id)
                                 if oldSquare!.xOutsideBounds(width: self.geoPos.width) && oldSquare!.yOutsideBounds(height: self.geoPos.height) {
@@ -195,31 +202,38 @@ struct PracticeView: View {
                                     self.children.squares[id] = SongSquare(x: oldSquare!.x, y: oldSquare!.y < 0 ? geoPos.height : 0)
                                 }
                             }
-                            let dist = offsetChange.translation.width * offsetChange.translation.width + offsetChange.translation.height * offsetChange.translation.height
-                            let factor = 1/(dist/500 + 1)
-                            let dragValue = CGSize(width: offsetChange.translation.width * factor, height: offsetChange.translation.height * factor)
-                            self.children.squares[id]!.updatePosition(translation: dragValue, screenSize: self.geoPos)
+                            let dist = change.width * change.width + change.height * change.height
+                            let factor = 1/(dist/1000 + 1)
+                            let dragValue = CGSize(width: change.width * factor, height: change.height * factor)
+                            if !lock {
+                                self.children.squares[id]!.updatePosition(translation: dragValue, screenSize: self.geoPos)
+                            }
                         }
-                        print("")
+                        lock = false
+                        prevTrans = offsetChange.translation
                     })
                     .onEnded({ offsetChange in
-                        for id in self.children.squares.keys {
-                            print("ID: \(id)")
-                            if self.children.squares[id]!.outsideBounds(dim: self.geoPos) {
-                                let oldSquare = self.children.squares.removeValue(forKey: id)
-                                if oldSquare!.xOutsideBounds(width: self.geoPos.width) && oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y < 0 ? geoPos.height : 0)
-                                } else if oldSquare!.xOutsideBounds(width: self.geoPos.width) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y)
-                                } else if oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x, y: oldSquare!.y < 0 ? geoPos.height : 0)
-                                }
-                            }
-                            self.children.squares[id]!.updatePosition(translation: offsetChange.translation, screenSize: self.geoPos, sensitivity: 0.1)
-                        }
-                        print("")
-                    }
-                            )
+                        print("ON ENDED")
+                        lock = true
+                    })
+//                    .onEnded({ offsetChange in
+//                        for id in self.children.squares.keys {
+//                            print("ID: \(id)")
+//                            if self.children.squares[id]!.outsideBounds(dim: self.geoPos) {
+//                                let oldSquare = self.children.squares.removeValue(forKey: id)
+//                                if oldSquare!.xOutsideBounds(width: self.geoPos.width) && oldSquare!.yOutsideBounds(height: self.geoPos.height) {
+//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y < 0 ? geoPos.height : 0)
+//                                } else if oldSquare!.xOutsideBounds(width: self.geoPos.width) {
+//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y)
+//                                } else if oldSquare!.yOutsideBounds(height: self.geoPos.height) {
+//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x, y: oldSquare!.y < 0 ? geoPos.height : 0)
+//                                }
+//                            }
+//                            self.children.squares[id]!.updatePosition(translation: offsetChange.translation, screenSize: self.geoPos, sensitivity: 0.1)
+//                        }
+//                        print("")
+//                    }
+//                            )
             )
         }
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
