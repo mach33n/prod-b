@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "04B64831-76B1-47D9-8B12-9A1DA23C5A9C"
+            uuid = "02D2753B-6537-43FD-A434-B09EE3E779C0"
             shouldBeEnabled = "Yes"
-            ignoreCount = "6"
+            ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "prod-b/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "395"
+            endingLineNumber = "395"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -23,33 +23,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D74CA7BD-A118-4C87-A63A-544EDD7FF5B2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "prod-b/ContentView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "04D700C3-B50C-41AB-ACC7-FA26DE867DDD"
+            uuid = "05EA39A1-409A-46BF-A03D-373A5A361D7E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "prod-b/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "438"
+            endingLineNumber = "438"
+            landmarkName = "updateLocal(change:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

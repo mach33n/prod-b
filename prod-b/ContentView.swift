@@ -9,6 +9,8 @@ import SwiftUI
 import CoreData
 import simd
 import Combine
+import Swift
+import AVFAudio
 
 protocol ContainerView: View {
     associatedtype Content
@@ -86,160 +88,6 @@ struct ContentView: View {
             .onChanged { newLoc in
                 location = newLoc.location
             }
-    }
-}
-
-class SongSquare : ObservableObject {
-    
-    @Published var x: CGFloat
-    @Published var y: CGFloat
-    @Published var color: Color
-    
-    init(x: CGFloat, y: CGFloat) {
-        self.x = x
-        self.y = y
-        self.color = .blue
-    }
-    
-    func updatePosition(translation: CGSize, screenSize: CGSize, sensitivity: CGFloat = 1.0) {
-//        print("Square Pos: (\(self.x), \(self.y))")
-//        print("Translation: (\(translation.width), \(translation.height))")
-//        print("Screen Size: (\(screenSize.width),\(screenSize.height))")
-        self.x += translation.width * sensitivity
-        self.y += translation.height * sensitivity
-        self.color = .green
-        self.objectWillChange.send()
-    }
-    
-    func outsideBounds(dim: CGSize) -> Bool {
-        return xOutsideBounds(width: dim.width) || yOutsideBounds(height: dim.height)
-    }
-    
-    func xOutsideBounds(width: CGFloat) -> Bool {
-        return self.x < 0 || self.x > width
-    }
-    
-    func yOutsideBounds(height: CGFloat) -> Bool {
-        return self.y < 0 || self.y > height
-    }
-}
-
-class SongSpace : ObservableObject {
-    @Published var squares = [
-        1: SongSquare(x: 50.0, y: 50.0),
-        2: SongSquare(x: 150.0, y: 150.0),
-        3: SongSquare(x: 250.0, y: 250.0),
-        4: SongSquare(x: 350.0, y: 350.0)
-    ] {
-        didSet {
-            subscribeToChanges()
-        }
-    }
-    
-    private var c: AnyCancellable?
-    init() {
-        subscribeToChanges()
-    }
-    
-    func subscribeToChanges() -> Void {
-        c = self.squares.publisher.flatMap({ square in
-            square.value.objectWillChange
-        }).sink(receiveValue: { [weak self] in
-            self?.objectWillChange.send()
-        })
-    }
-}
-
-struct PracticeView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-    
-    @State var location = CGPoint.zero
-    @StateObject var children = SongSpace()
-    @State var geoPos: CGSize = CGSize.zero
-    @State var lock = false
-    @State var prevTrans = CGSize(width: 0, height: 0)
-    
-    var body: some View {
-        ZStack {
-            GeometryReader { globPos in
-                ForEach(Array(children.squares.keys), id: \.self) { key in
-                    withAnimation {
-                        Rectangle()
-                            .position(x: 0, y: 0)
-                            .foregroundColor(children.squares[key]?.color)
-                            .frame(width: 50, height: 50, alignment: .center)
-                            .offset(x: children.squares[key]!.x, y: children.squares[key]!.y)
-                    }
-                }
-                .onAppear {
-                    self.geoPos = globPos.size
-                }
-            }.coordinateSpace(name: "GeoRead")
-            .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight/2, alignment: .center)
-            .background(Color.brown)
-            .gesture(
-                DragGesture(minimumDistance: 40.0, coordinateSpace: CoordinateSpace.local)
-                    .onChanged({ offsetChange in
-                        print("ON CHANGED")
-                        print("Translation Change: (\(offsetChange.translation.width), \(offsetChange.translation.height))")
-                        print("Position Change: (\(offsetChange.location.x), \(offsetChange.location.y))")
-                        print("")
-                        var change = CGSize(width: offsetChange.translation.width - prevTrans.width, height: offsetChange.translation.height - prevTrans.height)
-                        for id in self.children.squares.keys {
-                            //print("ID: \(id)")
-                            if self.children.squares[id]!.outsideBounds(dim: self.geoPos) {
-                                let oldSquare = self.children.squares.removeValue(forKey: id)
-                                if oldSquare!.xOutsideBounds(width: self.geoPos.width) && oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y < 0 ? geoPos.height : 0)
-                                } else if oldSquare!.xOutsideBounds(width: self.geoPos.width) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y)
-                                } else if oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-                                    self.children.squares[id] = SongSquare(x: oldSquare!.x, y: oldSquare!.y < 0 ? geoPos.height : 0)
-                                }
-                            }
-                            let dist = change.width * change.width + change.height * change.height
-                            let factor = 1/(dist/1000 + 1)
-                            let dragValue = CGSize(width: change.width * factor, height: change.height * factor)
-                            if !lock {
-                                self.children.squares[id]!.updatePosition(translation: dragValue, screenSize: self.geoPos)
-                            }
-                        }
-                        lock = false
-                        prevTrans = offsetChange.translation
-                    })
-                    .onEnded({ offsetChange in
-                        print("ON ENDED")
-                        lock = true
-                    })
-//                    .onEnded({ offsetChange in
-//                        for id in self.children.squares.keys {
-//                            print("ID: \(id)")
-//                            if self.children.squares[id]!.outsideBounds(dim: self.geoPos) {
-//                                let oldSquare = self.children.squares.removeValue(forKey: id)
-//                                if oldSquare!.xOutsideBounds(width: self.geoPos.width) && oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y < 0 ? geoPos.height : 0)
-//                                } else if oldSquare!.xOutsideBounds(width: self.geoPos.width) {
-//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x < 0 ? geoPos.width : 0, y: oldSquare!.y)
-//                                } else if oldSquare!.yOutsideBounds(height: self.geoPos.height) {
-//                                    self.children.squares[id] = SongSquare(x: oldSquare!.x, y: oldSquare!.y < 0 ? geoPos.height : 0)
-//                                }
-//                            }
-//                            self.children.squares[id]!.updatePosition(translation: offsetChange.translation, screenSize: self.geoPos, sensitivity: 0.1)
-//                        }
-//                        print("")
-//                    }
-//                            )
-            )
-        }
-        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
-        .background(
-            LinearGradient(gradient: Gradient(stops: [Gradient.Stop(color: .orange, location: 0), Gradient.Stop(color: .black, location: 0.2)]), startPoint: .top, endPoint: .bottom)
-        )
     }
 }
 
@@ -352,12 +200,279 @@ struct ScrollingStackSnap: ViewModifier {
     }
 }
 
+// MARK: - Start of SongSpace
+class SongSquare : ObservableObject, Equatable {
+    static func == (lhs: SongSquare, rhs: SongSquare) -> Bool {
+        // Need to update for all fields
+        return lhs.x == rhs.x && lhs.y == rhs.y && lhs.height == rhs.height && lhs.width == rhs.width && lhs.selected == rhs.selected
+    }
+    
+    @Published var x: CGFloat
+    @Published var y: CGFloat
+    @Published var height: CGFloat
+    @Published var width: CGFloat
+    private var selected: Bool
+    
+    init(x: CGFloat, y: CGFloat) {
+        self.x = x
+        self.y = y
+        self.height = 50
+        self.width = 50
+        self.selected = false
+    }
+    
+    // MARK: - SongSquare modification methods
+    func updatePosition(translation: CGSize, screenSize: CGSize, sensitivity: CGFloat = 1.0) {
+        self.x += translation.width * sensitivity
+        self.y += translation.height * sensitivity
+        
+        // Send Signal up to parent view to refresh view with updated Rectangle positions
+        self.objectWillChange.send()
+    }
+    
+    func selectSquare() {
+        if self.selected {
+            self.height = 50
+            self.width = 50
+        } else {
+            self.height = 100
+            self.width = 100
+        }
+        self.selected.toggle()
+        
+        // Send Signal up to parent view to refresh view with updated Rectangle positions
+        self.objectWillChange.send()
+    }
+    
+    // MARK: - SongSquare awareness methods
+    // Might exchange for global cursor idea
+    func outsideBounds(dim: CGSize) -> Bool {
+        return xOutsideBounds(width: dim.width) || yOutsideBounds(height: dim.height)
+    }
+    
+    func xOutsideBounds(width: CGFloat) -> Bool {
+        return self.x < 0 || self.x > width
+    }
+    
+    func yOutsideBounds(height: CGFloat) -> Bool {
+        return self.y < 0 || self.y > height
+    }
+    
+    func isSelected() -> Bool {
+        return self.selected
+    }
+}
+
+@propertyWrapper
+class SpaceWrap : ObservableObject, Equatable {
+    static func == (lhs: SpaceWrap, rhs: SpaceWrap) -> Bool {
+        return lhs.dict == rhs.dict
+    }
+    
+    @Published private var dict: Dictionary<Int, SongSquare>
+    private var c: AnyCancellable?
+    
+    init(dict: Dictionary<Int, SongSquare>) {
+        self.dict = dict
+        subscribeToChanges()
+    }
+    
+    // MARK: - Protective Wrapping for storage of squares
+    var wrappedValue: Dictionary<Int, SongSquare> {
+        get {
+            // TODO: Add security checks etc
+            return dict
+        }
+        set {
+            // TODO: Add security checks etc
+            self.dict = newValue
+            subscribeToChanges()
+        }
+    }
+    
+    func subscribeToChanges() -> Void {
+        c = self.dict.publisher.flatMap({ square in
+            square.value.objectWillChange
+        }).sink(receiveValue: { [weak self] in
+            self?.objectWillChange.send()
+        })
+    }
+}
+
+class SongSpace : ObservableObject {
+    // Need to connect to some datastore
+    @Published var squares = SpaceWrap(dict: [
+        1: SongSquare(x: 50.0, y: 50.0),
+        2: SongSquare(x: 150.0, y: 150.0),
+        3: SongSquare(x: 250.0, y: 250.0),
+        4: SongSquare(x: 350.0, y: 350.0)
+    ]) {
+        didSet {
+            subscribeToChanges()
+        }
+    }
+    
+    @Published var buffer = SpaceWrap(dict: [
+        5: SongSquare(x: -40.0, y: 300.0),
+        6: SongSquare(x: 300.0, y: -100.0),
+        7: SongSquare(x: 420.0, y: 300.0),
+        8: SongSquare(x: 150.0, y: 420.0)
+    ]) {
+        didSet {
+            subscribeToChanges()
+        }
+    }
+    
+    private var c: AnyCancellable?
+    
+    init() {
+        subscribeToChanges()
+    }
+    
+    func subscribeToChanges() -> Void {
+        c = self.squares.wrappedValue.publisher.flatMap({ square in
+            square.value.objectWillChange
+        }).sink(receiveValue: { [weak self] in
+            self?.objectWillChange.send()
+        })
+        c = self.buffer.wrappedValue.publisher.flatMap({ square in
+            square.value.objectWillChange
+        }).sink(receiveValue: { [weak self] in
+            self?.objectWillChange.send()
+        })
+    }
+    
+}
+
+struct Square: View {
+    @EnvironmentObject var square: SongSquare
+    var key: Int
+    @Binding var selected: SongSquare?
+    
+    var body: some View {
+        Rectangle()
+            .frame(width: square.width, height: square.height, alignment: .center)
+            .foregroundColor(.blue)
+            .cornerRadius(10.0)
+            .offset(x: square.x, y: square.y)
+            .animation(.easeInOut, value: square.x)
+            .animation(.easeInOut, value: square.y)
+            .animation(.easeInOut, value: square.width)
+            .animation(.easeInOut, value: square.height)
+            .shadow(radius: 5.0)
+            .gesture(
+                TapGesture()
+                    .onEnded({ val in
+                        if (selected != nil && selected!.isSelected()) {
+                            selected?.selectSquare()
+                        }
+                        if square != selected && !square.isSelected() {
+                            square.selectSquare()
+                        }
+                        selected = square
+                })
+            )
+    }
+}
+
+struct PracticeView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        animation: .default)
+    private var items: FetchedResults<Item>
+    
+    @StateObject var space = SongSpace()
+    @State var geoReadDim: CGSize = CGSize.zero
+    @State var prevTrans = CGSize(width: 0, height: 0)
+    @State var select: SongSquare?
+    var player: AVAudioPlayer = AVAudioPlayer()
+    
+    var body: some View {
+        ZStack {
+            GeometryReader { globPos in
+                ForEach(Array(space.squares.wrappedValue.keys), id: \.self) { key in
+                    withAnimation {
+                        Square(key: key, selected: $select)
+                            .environmentObject(space.squares.wrappedValue[key]!)
+                    }
+                }
+                .onAppear {
+                    self.geoReadDim = globPos.size
+                }
+            }
+            // Planning to separate the GeoReader from this screen
+            .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .center)
+            .background(Color(.sRGB, white: 0.10, opacity: 0.10))
+            .gesture(
+                DragGesture()
+                    .onChanged({ offsetChange in
+                        let change = CGSize(width: offsetChange.translation.width - prevTrans.width, height: offsetChange.translation.height - prevTrans.height)
+
+                        // Update view with new squares
+                        self.updateLocal(change: change)
+                        self.updateBuffer(change: change)
+
+                        // Keep track of total space change
+                        prevTrans = offsetChange.translation
+                    })
+            )
+//            Button {
+//                player.url = 
+//            } label: {
+//                <#code#>
+//            }
+
+        }
+        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .top)
+        .background(
+            LinearGradient(gradient: Gradient(stops: [Gradient.Stop(color: .orange, location: 0), Gradient.Stop(color: .black, location: 0.2)]), startPoint: .top, endPoint: .bottom)
+        )
+    }
+    
+    // Removes blocks that are outside of bounds and replaces them
+    func updateLocal(change: CGSize) {
+        for (id, value) in space.squares.wrappedValue {
+            if value.outsideBounds(dim: self.geoReadDim) {
+                self.space.buffer.wrappedValue[id] = self.space.squares.wrappedValue.removeValue(forKey: id)
+            } else {
+                self.updateSquare(id: id, change: change, store: true)
+            }
+        }
+    }
+    
+    func updateBuffer(change: CGSize) {
+        for (id, value) in space.buffer.wrappedValue {
+            if !value.xOutsideBounds(width: self.geoReadDim.width) && !value.yOutsideBounds(height: self.geoReadDim.height) {
+                self.space.squares.wrappedValue[id] = self.space.buffer.wrappedValue.removeValue(forKey: id)
+                self.updateSquare(id: id, change: change, store: true)
+            } else {
+                self.updateSquare(id: id, change: change, store: false)
+            }
+        }
+    }
+    
+    func updateSquare(id: Int, change: CGSize, store: Bool) {
+        // Asymptotic dragging
+        let dist = change.width * change.width + change.height * change.height
+        let factor = 1/(dist/2000 + 1)
+        let dragValue = CGSize(width: change.width * factor, height: change.height * factor)
+        if store {
+            self.space.squares.wrappedValue[id]!.updatePosition(translation: dragValue, screenSize: self.geoReadDim)
+        } else {
+            self.space.buffer.wrappedValue[id]!.updatePosition(translation: dragValue, screenSize: self.geoReadDim)
+        }
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         PracticeView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext).previewInterfaceOrientation(.portrait)
     }
 }
 
+// MARK: - Start of Extensions
 extension UIScreen {
     static let screenHeight = UIScreen.main.bounds.size.height
     static let screenWidth = UIScreen.main.bounds.size.width
