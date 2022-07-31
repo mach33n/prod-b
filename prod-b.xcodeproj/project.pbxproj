@@ -16,6 +16,9 @@
 		F28546332866921300A99A47 /* prod_bTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28546322866921300A99A47 /* prod_bTests.swift */; };
 		F285463D2866921300A99A47 /* prod_bUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285463C2866921300A99A47 /* prod_bUITests.swift */; };
 		F285463F2866921300A99A47 /* prod_bUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285463E2866921300A99A47 /* prod_bUITestsLaunchTests.swift */; };
+		F2BEC92C289551A000259B75 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = F2BEC92B289551A000259B75 /* SQLite */; };
+		F2BEC92E2895F99300259B75 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BEC92D2895F99300259B75 /* Storage.swift */; };
+		F2BEC9302896D21300259B75 /* PlayerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BEC92F2896D21300259B75 /* PlayerSlider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +51,8 @@
 		F28546382866921300A99A47 /* prod-bUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "prod-bUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F285463C2866921300A99A47 /* prod_bUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prod_bUITests.swift; sourceTree = "<group>"; };
 		F285463E2866921300A99A47 /* prod_bUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prod_bUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F2BEC92D2895F99300259B75 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		F2BEC92F2896D21300259B75 /* PlayerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSlider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2BEC92C289551A000259B75 /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +110,8 @@
 				F28546252866921300A99A47 /* Persistence.swift */,
 				F28546272866921300A99A47 /* prod_b.xcdatamodeld */,
 				F28546222866921300A99A47 /* Preview Content */,
+				F2BEC92D2895F99300259B75 /* Storage.swift */,
+				F2BEC92F2896D21300259B75 /* PlayerSlider.swift */,
 			);
 			path = "prod-b";
 			sourceTree = "<group>";
@@ -149,6 +157,9 @@
 			dependencies = (
 			);
 			name = "prod-b";
+			packageProductDependencies = (
+				F2BEC92B289551A000259B75 /* SQLite */,
+			);
 			productName = "prod-b";
 			productReference = F28546192866921000A99A47 /* prod-b.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +232,9 @@
 				Base,
 			);
 			mainGroup = F28546102866921000A99A47;
+			packageReferences = (
+				F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */,
+			);
 			productRefGroup = F285461A2866921000A99A47 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -267,6 +281,8 @@
 				F28546292866921300A99A47 /* prod_b.xcdatamodeld in Sources */,
 				F285461F2866921000A99A47 /* ContentView.swift in Sources */,
 				F285461D2866921000A99A47 /* prod_bApp.swift in Sources */,
+				F2BEC92E2895F99300259B75 /* Storage.swift in Sources */,
+				F2BEC9302896D21300259B75 /* PlayerSlider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,6 +606,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F2BEC92B289551A000259B75 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F28546272866921300A99A47 /* prod_b.xcdatamodeld */ = {

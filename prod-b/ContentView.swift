@@ -10,7 +10,7 @@ import CoreData
 import simd
 import Combine
 import Swift
-import AVFAudio
+import AVFoundation
 
 protocol ContainerView: View {
     associatedtype Content
@@ -240,6 +240,16 @@ class SongSquare : ObservableObject, Equatable {
         }
         self.selected.toggle()
         
+        let store = DataStore()
+        let url = store.pullStuff()
+        
+//        do {
+//            let player = try AVPlayer(url: URL(string: url!)!)
+//            player.play()
+//        } catch {
+//            print(error)
+//        }
+        
         // Send Signal up to parent view to refresh view with updated Rectangle positions
         self.objectWillChange.send()
     }
@@ -387,43 +397,57 @@ struct PracticeView: View {
     @State var geoReadDim: CGSize = CGSize.zero
     @State var prevTrans = CGSize(width: 0, height: 0)
     @State var select: SongSquare?
-    var player: AVAudioPlayer = AVAudioPlayer()
+    @State var value: Double = 30
+    
+//    var player: AVPlayer = AVPlayer(playerItem: AVPlayerItem(url: NSURL(string: "https://firebasestorage.googleapis.com/v0/b/prodb-3f552.appspot.com/o/Always%20on%20my%20Mind.mp3?alt=media&token=f2914a4c-ca8d-4eec-a4fc-2bc9c18e790d") as! URL))
     
     var body: some View {
+        let background = Color(red: 0.07, green: 0.07, blue: 0.12)
         ZStack {
-            GeometryReader { globPos in
-                ForEach(Array(space.squares.wrappedValue.keys), id: \.self) { key in
-                    withAnimation {
-                        Square(key: key, selected: $select)
-                            .environmentObject(space.squares.wrappedValue[key]!)
+            VStack {
+                GeometryReader { globPos in
+                    ForEach(Array(space.squares.wrappedValue.keys), id: \.self) { key in
+                        withAnimation {
+                            Square(key: key, selected: $select)
+                                .environmentObject(space.squares.wrappedValue[key]!)
+                        }
+                    }
+                    .onAppear {
+                        self.geoReadDim = globPos.size
+                        //                    player.play()
                     }
                 }
-                .onAppear {
-                    self.geoReadDim = globPos.size
-                }
+                // Planning to separate the GeoReader from this screen
+                .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .center)
+                .background(Color(.sRGB, white: 0.10, opacity: 0.10))
+                .gesture(
+                    DragGesture()
+                        .onChanged({ offsetChange in
+                            let change = CGSize(width: offsetChange.translation.width - prevTrans.width, height: offsetChange.translation.height - prevTrans.height)
+                            
+                            // Update view with new squares
+                            self.updateLocal(change: change)
+                            self.updateBuffer(change: change)
+                            
+                            // Keep track of total space change
+                            prevTrans = offsetChange.translation
+                        })
+                )
+                Spacer()
+                Group {
+                    CustomSlider(value: $value, range: (0, 100), knobWidth: 0) { modifiers in
+                      ZStack {
+                          LinearGradient(gradient: .init(colors: [Color.pink, Color.purple, Color.blue, Color.blue ]), startPoint: .leading, endPoint: .trailing)
+                          Group {
+                            background // = Color(red: 0.07, green: 0.07, blue: 0.12)
+                            Color.white.opacity(0.2)
+                            LinearGradient(gradient: .init(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.6) ]), startPoint: .bottom, endPoint: .top)
+                          }.modifier(modifiers.barRight)
+                       }.clipShape(MagnitudeChart()) // our shape from previous step will mask the bar via clipShape
+                    }.frame(height: 80)
+                }.frame(width:320)
+                Spacer()
             }
-            // Planning to separate the GeoReader from this screen
-            .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .center)
-            .background(Color(.sRGB, white: 0.10, opacity: 0.10))
-            .gesture(
-                DragGesture()
-                    .onChanged({ offsetChange in
-                        let change = CGSize(width: offsetChange.translation.width - prevTrans.width, height: offsetChange.translation.height - prevTrans.height)
-
-                        // Update view with new squares
-                        self.updateLocal(change: change)
-                        self.updateBuffer(change: change)
-
-                        // Keep track of total space change
-                        prevTrans = offsetChange.translation
-                    })
-            )
-//            Button {
-//                player.url = 
-//            } label: {
-//                <#code#>
-//            }
-
         }
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .top)
         .background(
@@ -441,7 +465,7 @@ struct PracticeView: View {
             }
         }
     }
-    
+
     func updateBuffer(change: CGSize) {
         for (id, value) in space.buffer.wrappedValue {
             if !value.xOutsideBounds(width: self.geoReadDim.width) && !value.yOutsideBounds(height: self.geoReadDim.height) {
@@ -462,6 +486,32 @@ struct PracticeView: View {
             self.space.squares.wrappedValue[id]!.updatePosition(translation: dragValue, screenSize: self.geoReadDim)
         } else {
             self.space.buffer.wrappedValue[id]!.updatePosition(translation: dragValue, screenSize: self.geoReadDim)
+        }
+    }
+}
+
+struct SliderView: View {
+    
+    @State var value: Double = 30
+    
+    var body: some View {
+        let background = Color(red: 0.07, green: 0.07, blue: 0.12)
+        return ZStack {
+            background.edgesIgnoringSafeArea(.all)
+            VStack(spacing: 30) {
+                Group {
+                    CustomSlider(value: $value, range: (0, 100), knobWidth: 0) { modifiers in
+                      ZStack {
+                          LinearGradient(gradient: .init(colors: [Color.pink, Color.purple, Color.blue, Color.blue ]), startPoint: .leading, endPoint: .trailing)
+                          Group {
+                            background // = Color(red: 0.07, green: 0.07, blue: 0.12)
+                            Color.white.opacity(0.2)
+                            LinearGradient(gradient: .init(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.6) ]), startPoint: .bottom, endPoint: .top)
+                          }.modifier(modifiers.barRight)
+                       }.clipShape(MagnitudeChart()) // our shape from previous step will mask the bar via clipShape
+                    }.frame(height: 80)
+                }.frame(width:320)
+            }
         }
     }
 }
