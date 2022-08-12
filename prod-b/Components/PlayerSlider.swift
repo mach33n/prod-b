@@ -13,73 +13,15 @@ import AVFoundation
 import Combine
 import Accelerate
 
-final class AudioPlayer: AVPlayer, ObservableObject {
-    @Published var currTime: Double = 0.0
-    static var player: AudioPlayer = AudioPlayer()
-    static var waveParser: AVAudioPlayer? = nil
-    private var token: Any?
-    
-    var currTimePassed: AnyPublisher<Double, Never> {
-        $currTime
-            .eraseToAnyPublisher()
-    }
-    
-    override init() {
-        super.init()
-        initObserver()
-    }
-    
-    func initObserver() {
-        self.token = self.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main) { [weak self] _ in
-            if self?.timeControlStatus == .playing {
-                self?.currTime = self?.currentTime().seconds ?? 0.0
-            }
-        }
-    }
-    
-    func changeTime(secs: Double) {
-        let timeCM = CMTime(seconds: secs, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        self.seek(to: timeCM)
-    }
-    
-    deinit {
-        if self.token != nil {
-            self.removeTimeObserver(self.token!)
-        }
-        self.token = nil
-    }
-}
-
-struct CustomSliderComponents {
-    let barLeft: CustomSliderModifier
-    let barRight: CustomSliderModifier
-    let knob: CustomSliderModifier
-}
-
-struct CustomSliderModifier: ViewModifier {
-    enum Name {
-        case barLeft
-        case barRight
-        case knob
-    }
-    let name: Name
-    let size: CGSize
-    let offset: CGFloat
-    
-    func body(content: Content) -> some View {
-        content.frame(width: size.width).position(x: size.width*0.5, y: size.height*0.5).offset(x: offset)
-    }
-}
-
-struct CustomSlider<Component: View>: View {
+struct PlayerSlider<Component: View>: View {
 
     @Binding var value: Double
     var range: (Double, Double)
     var knobWidth: CGFloat?
-    let viewBuilder: (CustomSliderComponents) -> Component
+    let viewBuilder: (PlayerSliderComponents) -> Component
     
     
-    init(value: Binding<Double>, range: (Double, Double), knobWidth: CGFloat? = nil, _ viewBuilder: @escaping (CustomSliderComponents) -> Component) {
+    init(value: Binding<Double>, range: (Double, Double), knobWidth: CGFloat? = nil, _ viewBuilder: @escaping (PlayerSliderComponents) -> Component) {
         _value = value
         self.range = range
         self.viewBuilder = viewBuilder
@@ -99,10 +41,10 @@ struct CustomSlider<Component: View>: View {
         let barLeftSize = CGSize(width: CGFloat(offsetX + knobSize.width * 0.5), height:  frame.height)
         let barRightSize = CGSize(width: frame.width - barLeftSize.width, height: frame.height)
         
-        let modifiers = CustomSliderComponents(
-                    barLeft: CustomSliderModifier(name: .barLeft, size: barLeftSize, offset: 0),
-                    barRight: CustomSliderModifier(name: .barRight, size: barRightSize, offset: barLeftSize.width),
-                    knob: CustomSliderModifier(name: .knob, size: knobSize, offset: offsetX)
+        let modifiers = PlayerSliderComponents(
+                    barLeft: PlayerSliderModifier(name: .barLeft, size: barLeftSize, offset: 0),
+                    barRight: PlayerSliderModifier(name: .barRight, size: barRightSize, offset: barLeftSize.width),
+                    knob: PlayerSliderModifier(name: .knob, size: knobSize, offset: offsetX)
         )
         return ZStack {
             viewBuilder(modifiers)
@@ -155,6 +97,27 @@ struct CustomSlider<Component: View>: View {
         let xrange: (Double, Double) = (0, Double(width.view - width.knob))
         let result = self.value.convert(fromRange: range, toRange: xrange)
         return CGFloat(result)
+    }
+}
+
+struct PlayerSliderComponents {
+    let barLeft: PlayerSliderModifier
+    let barRight: PlayerSliderModifier
+    let knob: PlayerSliderModifier
+}
+
+struct PlayerSliderModifier: ViewModifier {
+    enum Name {
+        case barLeft
+        case barRight
+        case knob
+    }
+    let name: Name
+    let size: CGSize
+    let offset: CGFloat
+    
+    func body(content: Content) -> some View {
+        content.frame(width: size.width).position(x: size.width*0.5, y: size.height*0.5).offset(x: offset)
     }
 }
 

@@ -17,7 +17,7 @@ protocol ContainerView: View {
     init(content: @escaping () -> Content)
 }
 
-struct mainView: View {
+struct initView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
@@ -62,8 +62,8 @@ struct mainView: View {
                     .cornerRadius(25.0)
                     .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
             }
-            .modifier(ScrollingStackSnap(numElements: 2, direction: .vertical, fullSize: UIScreen.screenHeight/2, debug: true))
-            .coordinateSpace(name: "mainView")
+//            .modifier(ScrollingStackSnap(numElements: 2, direction: .vertical, fullSize: UIScreen.screenHeight/2, debug: true))
+            .coordinateSpace(name: "initView")
             .foregroundColor(.gray)
             .opacity(0.6)
             .overlay(dot)
@@ -84,7 +84,7 @@ struct mainView: View {
     }
     
     var drag: some Gesture {
-        DragGesture(minimumDistance: 0.1, coordinateSpace: .named("mainView"))
+        DragGesture(minimumDistance: 0.1, coordinateSpace: .named("initView"))
             .onChanged { newLoc in
                 location = newLoc.location
             }
@@ -200,8 +200,8 @@ struct ScrollingStackSnap: ViewModifier {
     }
 }
 
-struct mainView_Previews: PreviewProvider {
+struct initView_Previews: PreviewProvider {
     static var previews: some View {
-        mainView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext).previewInterfaceOrientation(.portrait)
+        initView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext).previewInterfaceOrientation(.portrait)
     }
 }

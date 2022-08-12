@@ -1,0 +1,153 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/Users/cameronbennett/Desktop/prod-b/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+0	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^    {$/;"	o	array:colors
+0	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+0	prod-b/Assets.xcassets/home.imageset/Contents.json	/^    {$/;"	o	array:images
+0	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^    {$/;"	o	array:images
+0	prod-b/Assets.xcassets/user.imageset/Contents.json	/^    {$/;"	o	array:images
+1	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+1	prod-b/Assets.xcassets/home.imageset/Contents.json	/^    {$/;"	o	array:images
+1	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^    {$/;"	o	array:images
+1	prod-b/Assets.xcassets/user.imageset/Contents.json	/^    {$/;"	o	array:images
+10	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+11	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+12	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+13	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+14	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+15	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+16	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+17	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+2	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+2	prod-b/Assets.xcassets/home.imageset/Contents.json	/^    {$/;"	o	array:images
+2	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^    {$/;"	o	array:images
+2	prod-b/Assets.xcassets/user.imageset/Contents.json	/^    {$/;"	o	array:images
+3	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+4	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+5	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+6	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+7	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+8	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+9	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    {$/;"	o	array:images
+F28546182866921000A99A47	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^		<key>F28546182866921000A99A47<\/key>$/;"	k	key:SuppressBuildableAutocreation
+F285462D2866921300A99A47	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^		<key>F285462D2866921300A99A47<\/key>$/;"	k	key:SuppressBuildableAutocreation
+F28546372866921300A99A47	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^		<key>F28546372866921300A99A47<\/key>$/;"	k	key:SuppressBuildableAutocreation
+IDEDidComputeMac32BitWarning	prod-b.xcodeproj/prod-b.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist	/^	<key>IDEDidComputeMac32BitWarning<\/key>$/;"	k
+IDEDidComputeMac32BitWarning	prod-b.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist	/^	<key>IDEDidComputeMac32BitWarning<\/key>$/;"	k
+SchemeUserState	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^	<key>SchemeUserState<\/key>$/;"	k
+SuppressBuildableAutocreation	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^	<key>SuppressBuildableAutocreation<\/key>$/;"	k
+author	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Assets.xcassets/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Assets.xcassets/home.imageset/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Assets.xcassets/user.imageset/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+author	prod-b/Preview Content/Preview Assets.xcassets/Contents.json	/^    "author" : "xcode",$/;"	s	object:info
+colors	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^  "colors" : [$/;"	a
+filename	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "filename" : "home.png",$/;"	s	object:images.0
+filename	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "filename" : "settings.png",$/;"	s	object:images.0
+filename	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "filename" : "user.png",$/;"	s	object:images.0
+idiom	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^      "idiom" : "universal"$/;"	s	object:colors.0
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ios-marketing",$/;"	s	object:images.17
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.10
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.11
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.12
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.13
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.14
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.15
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.16
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.8
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "ipad",$/;"	s	object:images.9
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.0
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.1
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.2
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.3
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.4
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.5
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.6
+idiom	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "idiom" : "iphone",$/;"	s	object:images.7
+idiom	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.0
+idiom	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.1
+idiom	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.2
+idiom	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.0
+idiom	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.1
+idiom	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.2
+idiom	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.0
+idiom	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.1
+idiom	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "idiom" : "universal",$/;"	s	object:images.2
+images	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^  "images" : [$/;"	a
+images	prod-b/Assets.xcassets/home.imageset/Contents.json	/^  "images" : [$/;"	a
+images	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^  "images" : [$/;"	a
+images	prod-b/Assets.xcassets/user.imageset/Contents.json	/^  "images" : [$/;"	a
+info	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Assets.xcassets/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Assets.xcassets/home.imageset/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Assets.xcassets/user.imageset/Contents.json	/^  "info" : {$/;"	o
+info	prod-b/Preview Content/Preview Assets.xcassets/Contents.json	/^  "info" : {$/;"	o
+orderHint	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^			<key>orderHint<\/key>$/;"	k	key:SchemeUserState.prod-b.xcscheme_^#shared#^_
+primary	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^			<key>primary<\/key>$/;"	k	key:SuppressBuildableAutocreation.F28546182866921000A99A47
+primary	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^			<key>primary<\/key>$/;"	k	key:SuppressBuildableAutocreation.F285462D2866921300A99A47
+primary	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^			<key>primary<\/key>$/;"	k	key:SuppressBuildableAutocreation.F28546372866921300A99A47
+prod-b.xcscheme_^#shared#^_	prod-b.xcodeproj/xcuserdata/cameronbennett.xcuserdatad/xcschemes/xcschememanagement.plist	/^		<key>prod-b.xcscheme_^#shared#^_<\/key>$/;"	k	key:SchemeUserState
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "1x",$/;"	s	object:images.10
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "1x",$/;"	s	object:images.12
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "1x",$/;"	s	object:images.14
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "1x",$/;"	s	object:images.17
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "1x",$/;"	s	object:images.8
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.0
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.11
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.13
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.15
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.16
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.2
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.4
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.6
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "2x",$/;"	s	object:images.9
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "3x",$/;"	s	object:images.1
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "3x",$/;"	s	object:images.3
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "3x",$/;"	s	object:images.5
+scale	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "scale" : "3x",$/;"	s	object:images.7
+scale	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "scale" : "1x"$/;"	s	object:images.0
+scale	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "scale" : "2x"$/;"	s	object:images.1
+scale	prod-b/Assets.xcassets/home.imageset/Contents.json	/^      "scale" : "3x"$/;"	s	object:images.2
+scale	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "scale" : "1x"$/;"	s	object:images.0
+scale	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "scale" : "2x"$/;"	s	object:images.1
+scale	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^      "scale" : "3x"$/;"	s	object:images.2
+scale	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "scale" : "1x"$/;"	s	object:images.0
+scale	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "scale" : "2x"$/;"	s	object:images.1
+scale	prod-b/Assets.xcassets/user.imageset/Contents.json	/^      "scale" : "3x"$/;"	s	object:images.2
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "1024x1024"$/;"	s	object:images.17
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "20x20"$/;"	s	object:images.0
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "20x20"$/;"	s	object:images.1
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "20x20"$/;"	s	object:images.8
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "20x20"$/;"	s	object:images.9
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "29x29"$/;"	s	object:images.10
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "29x29"$/;"	s	object:images.11
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "29x29"$/;"	s	object:images.2
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "29x29"$/;"	s	object:images.3
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "40x40"$/;"	s	object:images.12
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "40x40"$/;"	s	object:images.13
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "40x40"$/;"	s	object:images.4
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "40x40"$/;"	s	object:images.5
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "60x60"$/;"	s	object:images.6
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "60x60"$/;"	s	object:images.7
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "76x76"$/;"	s	object:images.14
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "76x76"$/;"	s	object:images.15
+size	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^      "size" : "83.5x83.5"$/;"	s	object:images.16
+version	prod-b/Assets.xcassets/AccentColor.colorset/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Assets.xcassets/AppIcon.appiconset/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Assets.xcassets/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Assets.xcassets/home.imageset/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Assets.xcassets/settings.imageset/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Assets.xcassets/user.imageset/Contents.json	/^    "version" : 1$/;"	n	object:info
+version	prod-b/Preview Content/Preview Assets.xcassets/Contents.json	/^    "version" : 1$/;"	n	object:info

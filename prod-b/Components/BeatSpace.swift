@@ -1,17 +1,15 @@
 //
-//  ContentView.swift
+//  BeatSpace.swift
 //  prod-b
 //
-//  Created by Cameron Bennett on 6/24/22.
+//  Created by Cameron Bennett on 8/9/22.
 //
 
 import SwiftUI
-import CoreData
-import simd
+import Collections
 import Combine
 import Swift
 import AVFoundation
-import Collections
 
 // MARK: - Start of SongSpace
 struct Square: View {
@@ -35,16 +33,17 @@ struct Square: View {
                                     AudioPlayer.player.pause()
                                     AudioPlayer.player.replaceCurrentItem(with: nil)
                                     SongSquare.current = nil
+                                    songSquare.selectSquare()
                                 } else {
                                     if SongSquare.current != nil {
                                         SongSquare.current?.selectSquare()
                                     }
-                                    AudioPlayer.player.replaceCurrentItem(with: songSquare.getAVPlayerItem())
-                                    MagnitudeChart.loadValues(waveform: songSquare.waveValues)
-                                    AudioPlayer.player.play()
-                                    SongSquare.current = songSquare
+                                    AudioPlayer.player.replaceCurrentItem(with: songSquare.getAVPlayerItem()) {
+                                        AudioPlayer.player.play()
+                                        SongSquare.current = songSquare
+                                        songSquare.selectSquare()
+                                    }
                                 }
-                                songSquare.selectSquare()
                             }
                         )
                     )
@@ -205,43 +204,6 @@ class SongSquare : ObservableObject, Equatable, Hashable {
     }
 }
 
-// Useful wrapper for protecting access to the desired dictionaries of squares
-@propertyWrapper
-class SpaceWrap : ObservableObject, Equatable {
-    static func == (lhs: SpaceWrap, rhs: SpaceWrap) -> Bool {
-        return lhs.dict == rhs.dict
-    }
-    
-    @Published private var dict: OrderedDictionary<String, SongSquare>
-    private var c: AnyCancellable?
-    
-    init(dict: OrderedDictionary<String, SongSquare>) {
-        self.dict = dict
-        subscribeToChanges()
-    }
-    
-    // MARK: - Protective Wrapping for storage of squares
-    var wrappedValue: OrderedDictionary<String, SongSquare> {
-        get {
-            // TODO: Add security checks etc
-            return dict
-        }
-        set {
-            // TODO: Add security checks etc
-            self.dict = newValue
-            subscribeToChanges()
-        }
-    }
-    
-    func subscribeToChanges() -> Void {
-        c = self.dict.publisher.flatMap({ square in
-            square.value.objectWillChange
-        }).sink(receiveValue: { [weak self] in
-            self?.objectWillChange.send()
-        })
-    }
-}
-
 class SongSpace : ObservableObject {
     enum axes {
         case Happy_Sad
@@ -249,9 +211,8 @@ class SongSpace : ObservableObject {
     }
     
     // Need to connect to some datastore
-    @Published var squares = SpaceWrap(dict: OrderedDictionary<String, SongSquare>())
-    @Published var buffer = SpaceWrap(dict: OrderedDictionary<String, SongSquare>())
-    @Published var cursor = CGPoint(x: 0, y: 0)
+    @Published var squares =  OrderedDictionary<String, SongSquare>()
+    @Published var buffer = OrderedDictionary<String, SongSquare>()
     private var store = DataStore()
     private var c: AnyCancellable?
     
@@ -260,17 +221,17 @@ class SongSpace : ObservableObject {
         (self.squares, self.buffer) = self.twoDimEvenLoad(axis1: .Happy_Sad, axis2: .Aggressive_Relaxed)
     }
     
-    func twoDimEvenLoad(axis1: axes, axis2: axes, numTracks: Int = 1) -> (SpaceWrap, SpaceWrap) {
+    func twoDimEvenLoad(axis1: axes, axis2: axes, numTracks: Int = 1) -> (OrderedDictionary<String, SongSquare>, OrderedDictionary<String, SongSquare>) {
         return store.pullLocal()
     }
     
     func subscribeToChanges() -> Void {
-        c = self.squares.wrappedValue.publisher.flatMap({ square in
+        c = self.squares.publisher.flatMap({ square in
             square.value.objectWillChange
         }).sink(receiveValue: { [weak self] in
             self?.objectWillChange.send()
         })
-        c = self.buffer.wrappedValue.publisher.flatMap({ square in
+        c = self.buffer.publisher.flatMap({ square in
             square.value.objectWillChange
         }).sink(receiveValue: { [weak self] in
             self?.objectWillChange.send()
@@ -278,153 +239,77 @@ class SongSpace : ObservableObject {
     }
 }
 
-struct PlayerView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-    
-    @StateObject var space = SongSpace()
-    static var geoReadDim: CGSize = CGSize(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4)
+struct BeatSpace: View {
+    @StateObject private var space = SongSpace()
     @State var prevTrans = CGSize(width: 0, height: 0)
-    @State var selected: SongSquare?
-    @State var value: Double = 30
-    @State var playing = false
+    @State var cursor: CGPoint = CGPoint.zero
     
     var body: some View {
-        let background = Color(red: 0.07, green: 0.07, blue: 0.12)
         ZStack {
-            VStack {
-                GeometryReader { globPos in
-                    RoundedRectangle(cornerRadius: 10.0)
-                        .frame(width: 20.0, height: 20.0, alignment: .center)
-                        .offset(x: space.cursor.x, y: space.cursor.y)
-                        .foregroundStyle(.red)
-                    ForEach(space.squares.wrappedValue.values, id: \.self) { square in
-                        withAnimation {
-                            Square()
-                                .frame(width: square.width, height: square.height, alignment: .center)
-                                .environmentObject(square)
-                        }
-                    }
-                    .onAppear {
-                        PlayerView.geoReadDim = globPos.size
+            GeometryReader { globPos in
+                RoundedRectangle(cornerRadius: 10.0)
+                    .frame(width: 20.0, height: 20.0, alignment: .center)
+                    .offset(x: self.cursor.x, y: self.cursor.y)
+                    .foregroundStyle(.red)
+                ForEach(space.squares.values, id: \.self) { square in
+                    withAnimation {
+                        Square()
+                            .frame(width: square.width, height: square.height, alignment: .center)
+                            .environmentObject(square)
                     }
                 }
-                .background(Color.black.opacity(0.0001))
-                // Planning to separate the GeoReader from this screen
-                .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .topLeading)
-                .onAppear(perform: {
-                    // Update view with new squares
-                    self.updateLocal(change: self.space.cursor.toCGSize())
-                    self.updateBuffer(change: self.space.cursor.toCGSize())
-                    self.updateCursor(change: PlayerView.geoReadDim/2)
-                })
-                .gesture(
-                    DragGesture()
-                        .onChanged({ offsetChange in
-                            let diff = offsetChange.translation - prevTrans
-                            var change = CGSize(width: diff.width, height: diff.height)
-                            change = asymDrag(change: change)
-                            
-                            // Update view with new squares
-                            self.updateLocal(change: change)
-                            self.updateBuffer(change: change)
-                            self.updateCursor(change: change)
-                            
-                            // Keep track of total space change
-                            prevTrans = offsetChange.translation
-                        })
-                )
-                VStack {
-                    Spacer(minLength: 10.0)
-                    // Waveform and underlying bar
-                    HStack {
-                        VStack(spacing: 0) {
-                            CustomSlider(value: $value, range: (0, 100), knobWidth: 0) { modifiers in
-                                ZStack {
-                                    LinearGradient(gradient: .init(colors: [Color.pink, Color.purple, Color.blue, Color.blue ]), startPoint: .leading, endPoint: .trailing)
-                                    Group {
-                                        background // = Color(red: 0.07, green: 0.07, blue: 0.12)
-                                        Color.white.opacity(0.2)
-                                        LinearGradient(gradient: .init(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.6)]), startPoint: .bottom, endPoint: .top)
-                                    }.modifier(modifiers.barRight)
-                                }
-                                .clipShape(MagnitudeChart.magnitudeChart) // our shape from previous step will mask the bar via clipShape
-                            }
-                            .frame(width: UIScreen.screenWidth*9/10, height: 60, alignment: .center)
-                            .edgesIgnoringSafeArea(.bottom)
-                        }
-                    }.frame(width: UIScreen.screenWidth)
-                    Spacer()
-                    
-                    // Buttons
-                    HStack {
-                        Spacer()
-                        PlayerButton(frameDim: CGSize(width: 50, height: 50), imgName: "arrow", imgScale: 0.5, rotate: true) {
-                            if AudioPlayer.player.currentItem != nil {
-                                AudioPlayer.player.changeTime(secs: AudioPlayer.player.currTime - 5.0)
-                            }
-                        }
-                        Spacer()
-                        PlayerButton(frameDim: CGSize(width: 90, height: 90), imgName: playing ? "play" : "pause" , imgScale: 2/3) {
-                            if AudioPlayer.player.currentItem != nil {
-                                if AudioPlayer.player.timeControlStatus == .playing {
-                                    AudioPlayer.player.pause()
-                                } else {
-                                    AudioPlayer.player.play()
-                                }
-                                playing.toggle()
-                            }
-                        }
-                        Spacer()
-                        PlayerButton(frameDim: CGSize(width: 50, height: 50), imgName: "arrow", imgScale: 0.5) {
-                            if AudioPlayer.player.currentItem != nil {
-                                AudioPlayer.player.changeTime(secs: AudioPlayer.player.currTime + 5.0)
-                            }
-                        }
-                        Spacer()
-                        Button {
-                            
-                        } label: {
-                            Image("update-arrows").resizable().scaledToFit().colorInvert()
-                        }.frame(width: 20, height: 20, alignment: .center).padding(SwiftUI.Edge.Set.leading, 20.0)
-                        
-                    }.frame(width: UIScreen.screenWidth*8/10)
-                    Spacer()
+                .onAppear {
+                    PlayerView.geoReadDim = globPos.size
                 }
-                .frame(width: UIScreen.screenWidth)
-                .background(Color(.sRGB, white: 0.1, opacity: 1.0))
             }
-            .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
-        }
-        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
-        .ignoresSafeArea(.all, edges: .top)
-        .background(
+            .background(Color.black.opacity(0.0001))
+            // Planning to separate the GeoReader from this screen
+            .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .topLeading)
+            .onAppear(perform: {
+                // Update view with new squares
+                self.updateLocal(change: self.cursor.toCGSize())
+                self.updateBuffer(change: self.cursor.toCGSize())
+                self.updateCursor(change: PlayerView.geoReadDim/2)
+            })
+            .gesture(
+                DragGesture()
+                    .onChanged({ offsetChange in
+                        let diff = offsetChange.translation - prevTrans
+                        var change = CGSize(width: diff.width, height: diff.height)
+                        change = asymDrag(change: change)
+                        
+                        // Update view with new squares
+                        self.updateLocal(change: change)
+                        self.updateBuffer(change: change)
+                        self.updateCursor(change: change)
+                        
+                        // Keep track of total space change
+                        prevTrans = offsetChange.translation
+                    })
+            )
+        }.background(
             ZStack {
                 LinearGradient(stops: [.init(color: .blue, location: 0.4), .init(color: .red, location: 0.6)], startPoint: UnitPoint(x: 0.0, y: 0.0), endPoint: UnitPoint(x: 0.0, y: 1.0))
                     .frame(width: UIScreen.screenWidth*2, height: UIScreen.screenHeight*5, alignment: .center)
                     .position(x: UIScreen.screenWidth/2, y: 0.0)
-                    .offset(x: 0.0, y: space.cursor.y.clamped(to: -PlayerView.geoReadDim.height/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.height/2))
+                    .offset(x: 0.0, y: self.cursor.y.clamped(to: -PlayerView.geoReadDim.height/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.height/2))
                 LinearGradient(stops: [.init(color: .green, location: 0.4), .init(color: .indigo, location: 0.6)], startPoint: .leading, endPoint: .trailing)
                     .blendMode(BlendMode.exclusion)
                     .frame(width: UIScreen.screenWidth*5, height: UIScreen.screenHeight*2, alignment: .center)
                     .position(x: 0.0, y: UIScreen.screenHeight/2)
-                    .offset(x: space.cursor.x.clamped(to: -PlayerView.geoReadDim.width/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.width/2), y: 0.0)
+                    .offset(x: self.cursor.x.clamped(to: -PlayerView.geoReadDim.width/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.width/2), y: 0.0)
             }.frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
         )
     }
     
     func updateCursor(change: CGSize) {
-        self.space.cursor.x += change.width
-        self.space.cursor.y += change.height
+        self.cursor.x += change.width
+        self.cursor.y += change.height
     }
     
     // Removes blocks that are outside of bounds and replaces them
     func updateLocal(change: CGSize) {
-        for (id, value) in space.squares.wrappedValue {
+        for (id, value) in space.squares {
             if value.isSelected() {
                 var comb = value.point + SongSquare.selOffset
                 var diff = CGSize.zero
@@ -442,7 +327,7 @@ struct PlayerView: View {
                 }
                 self.updateSquare(id: id, change: diff, store: true)
             } else if value.outsideBounds(dim: PlayerView.geoReadDim) {
-                self.space.buffer.wrappedValue[id] = self.space.squares.wrappedValue.removeValue(forKey: id)
+                self.space.buffer[id] = self.space.squares.removeValue(forKey: id)
             } else {
                 self.updateSquare(id: id, change: change, store: true)
             }
@@ -450,9 +335,9 @@ struct PlayerView: View {
     }
     
     func updateBuffer(change: CGSize) {
-        for (id, value) in space.buffer.wrappedValue {
+        for (id, value) in space.buffer {
             if !value.point.xOutsideBounds(width: PlayerView.geoReadDim.width) && !value.point.yOutsideBounds(height: PlayerView.geoReadDim.height) {
-                self.space.squares.wrappedValue[id] = self.space.buffer.wrappedValue.removeValue(forKey: id)
+                self.space.squares[id] = self.space.buffer.removeValue(forKey: id)
                 self.updateSquare(id: id, change: change, store: true)
             } else {
                 self.updateSquare(id: id, change: change, store: false)
@@ -462,9 +347,9 @@ struct PlayerView: View {
     
     private func updateSquare(id: String, change: CGSize, store: Bool) {
         if store {
-            self.space.squares.wrappedValue[id]!.updatePosition(translation: change)
+            self.space.squares[id]!.updatePosition(translation: change)
         } else {
-            self.space.buffer.wrappedValue[id]!.updatePosition(translation: change)
+            self.space.buffer[id]!.updatePosition(translation: change)
         }
     }
     
@@ -476,114 +361,3 @@ struct PlayerView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext).previewInterfaceOrientation(.portrait)
-    }
-}
-
-
-// MARK: - Start of Extensions
-extension UIScreen {
-    static let screenHeight = UIScreen.main.bounds.size.height
-    static let screenWidth = UIScreen.main.bounds.size.width
-    static let screenSize = UIScreen.main.bounds.size
-}
-
-extension UIImage {
-    var averageColor: Color {
-        let ci = CIImage(image: self)!
-        let filter = CIFilter(name: "CIAreaAverage", parameters: [
-            "inputExtent": CIVector(cgRect: ci.extent),
-            "inputImage": ci
-        ])!
-        let ciimg = filter.outputImage
-        
-        let context = CIContext()
-        let cgimg = context.createCGImage(ciimg!, from: ciimg!.extent)
-        let data = CFDataGetBytePtr(cgimg?.dataProvider?.data!)
-        return Color(.sRGB, red: Double(data![0])/255.0, green: Double(data![1])/255.0, blue: Double(data![2])/255.0, opacity: Double(data![3])/255.0)
-    }
-}
-
-extension ContainerView {
-    init(@ViewBuilder _ content: @escaping () -> Content) {
-        self.init(content: content)
-    }
-}
-
-extension CGPoint {
-    static func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        let x = lhs.x + rhs.x
-        let y = lhs.y + rhs.y
-        return CGPoint(x: x, y: y)
-    }
-    
-    static func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        let x = lhs.x - rhs.x
-        let y = lhs.y - rhs.y
-        return CGPoint(x: x, y: y)
-    }
-    
-    static func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        let x = lhs.x * rhs.x
-        let y = lhs.y * rhs.y
-        return CGPoint(x: x, y: y)
-    }
-    
-    static func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
-        return lhs.x == rhs.x && lhs.y == rhs.y
-    }
-    
-    mutating func outsideBounds(dim: CGSize, offset: CGSize = CGSize.zero) -> Bool {
-        return self.xOutsideBounds(width: dim.width, offset: offset.width) || self.yOutsideBounds(height: dim.height, offset: offset.height)
-    }
-    
-    mutating func xOutsideBounds(width: CGFloat = UIScreen.screenWidth, offset: CGFloat = 0.0) -> Bool {
-        return self.x < offset || self.x > width
-    }
-    
-    mutating func yOutsideBounds(height: CGFloat = UIScreen.screenHeight, offset: CGFloat = 0.0) -> Bool {
-        return self.y < offset || self.y > height
-    }
-    
-    mutating func toCGSize() -> CGSize {
-        return CGSize(width: self.x, height: self.y)
-    }
-}
-
-extension CGSize : _VectorMath {
-    static func + (lhs: CGSize, rhs: CGSize) -> CGSize {
-        let width = lhs.width + rhs.width
-        let height = lhs.height + rhs.height
-        return CGSize(width: width, height: height)
-    }
-    
-    static func - (lhs: CGSize, rhs: CGSize) -> CGSize {
-        let width = lhs.width - rhs.width
-        let height = lhs.height - rhs.height
-        return CGSize(width: width, height: height)
-    }
-    
-    static func * (lhs: CGSize, rhs: CGSize) -> CGSize {
-        let width = lhs.width * rhs.width
-        let height = lhs.height * rhs.height
-        return CGSize(width: width, height: height)
-    }
-    
-    static func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
-        let width = lhs.width * rhs
-        let height = lhs.height * rhs
-        return CGSize(width: width, height: height)
-    }
-    
-    mutating func toCGPoint() -> CGPoint {
-        return CGPoint(x: self.width, y: self.height)
-    }
-}
-
-extension Comparable {
-    func clamped(to limits: ClosedRange<Self>) -> Self {
-        return min(max(self, limits.lowerBound), limits.upperBound)
-    }
-}

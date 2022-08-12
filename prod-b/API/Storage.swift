@@ -10,6 +10,7 @@ import SQLite
 import MobileCoreServices
 import SwiftUI
 import AVFoundation
+import Collections
 
 struct DataStore {
     
@@ -41,9 +42,9 @@ struct DataStore {
         self.imageTable = Table("ID_Image_Map")
     }
     
-    func pullLocal(cursor: CGPoint = CGPoint(x: 0.0, y: 0.0)) -> (SpaceWrap, SpaceWrap) {
-        var retLocal: SpaceWrap = SpaceWrap(dict: [:])
-        var retBuffer: SpaceWrap = SpaceWrap(dict: [:])
+    func pullLocal(cursor: CGPoint = CGPoint(x: 0.0, y: 0.0)) -> (OrderedDictionary<String, SongSquare>, OrderedDictionary<String, SongSquare>) {
+        var retLocal: OrderedDictionary<String, SongSquare> = OrderedDictionary<String, SongSquare>()
+        var retBuffer: OrderedDictionary<String, SongSquare> = OrderedDictionary<String, SongSquare>()
         do {
             let distFunc: (Expression<Double>, Expression<Double>, Double, Double) -> Expression<Double> = try db!.createFunction("distFunc", { x1, y1, x2, y2 in
                 return sqrt(pow(x1-x2, 2) + pow(y1-y2, 2))
@@ -56,7 +57,7 @@ struct DataStore {
             for row in try db!.prepare(quad1) {
                 let imageUrl = Array(try db!.prepare(self.imageTable.select(image).filter(id == row[id])))[0][image]
                 print("id: \(row[id]), x: \(row[happyScore]), y: \(row[aggScore]), audioUrl: \(row[audioUrl])")
-                retBuffer.wrappedValue[row[id]] = SongSquare(key: row[id], x: row[happyScore]*UIScreen.screenWidth, y: row[aggScore]*UIScreen.screenWidth, audioURL: row[audioUrl], trackName: row[trackName] ?? "", producerName: row[producerName], image: imageUrl)
+                retBuffer[row[id]] = SongSquare(key: row[id], x: row[happyScore]*UIScreen.screenWidth, y: row[aggScore]*UIScreen.screenWidth, audioURL: row[audioUrl], trackName: row[trackName] ?? "", producerName: row[producerName], image: imageUrl)
             }
         } catch {
             print(error)
