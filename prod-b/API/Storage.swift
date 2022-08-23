@@ -49,7 +49,7 @@ struct DataStore {
             let distFunc: (Expression<Double>, Expression<Double>, Double, Double) -> Expression<Double> = try db!.createFunction("distFunc", { x1, y1, x2, y2 in
                 return sqrt(pow(x1-x2, 2) + pow(y1-y2, 2))
             })
-            let quad1 = table.filter(happyScore > 0.5).filter(aggScore > 0.5).order(distFunc(happyScore, aggScore, 0.5, 0.5).asc).limit(4)
+            let quad1 = table.filter(happyScore > 0.5).filter(aggScore > 0.5).order(distFunc(happyScore, aggScore, 0.5, 0.5).asc).limit(5)
             //let quad2 = table.filter(happyScore < 0.5).filter(aggScore > 0.5).order(distFunc(happyScore, aggScore, 0.5, 0.5).asc).limit(1)
             //let quad3 = table.filter(happyScore > 0.5).filter(aggScore < 0.5).order(distFunc(happyScore, aggScore, 0.5, 0.5).asc).limit(1)
             //let quad4 = table.filter(happyScore < 0.5).filter(aggScore < 0.5).order(distFunc(happyScore, aggScore, 0.5, 0.5).asc).limit(1)

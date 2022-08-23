@@ -23,12 +23,11 @@ struct PlayerView: View {
     
     @State var value: Double = 30
     @State var playing = false
-    
     @State var space = BeatSpace()
+    @State var looping = false
     
     var bottomBar: some View {
         HStack {
-            Spacer()
             PlayerButton(frameDim: CGSize(width: 50, height: 50), imgName: "arrow", imgScale: 0.5, rotate: true) {
                 if AudioPlayer.player.currentItem != nil {
                     AudioPlayer.player.changeTime(secs: AudioPlayer.player.currTime - 5.0)
@@ -53,9 +52,13 @@ struct PlayerView: View {
             }
             Spacer()
             Button {
-                
+                if self.looping {
+                    self.looping = AudioPlayer.player.remLoop()
+                } else {
+                    self.looping = AudioPlayer.player.initLoop()
+                }
             } label: {
-                Image("update-arrows").resizable().scaledToFit().colorInvert()
+                Image("update-arrows").resizable().scaledToFit().colorInvert().colorMultiply(self.looping ? .green : .white)
             }.frame(width: 20, height: 20, alignment: .center).padding(SwiftUI.Edge.Set.leading, 20.0)
             
         }.frame(width: UIScreen.screenWidth*8/10)
@@ -66,7 +69,6 @@ struct PlayerView: View {
         ZStack {
             VStack {
                 space
-                
                 VStack {
                     Spacer(minLength: 10.0)
                     // Waveform and underlying bar
@@ -99,6 +101,10 @@ struct PlayerView: View {
             .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
         }
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
+    }
+    
+    func updatePurchase() {
+        self.space.purchasing.toggle()
     }
 }
 

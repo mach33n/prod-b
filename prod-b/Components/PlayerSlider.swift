@@ -122,7 +122,6 @@ struct PlayerSliderModifier: ViewModifier {
 }
 
 struct MagnitudeChart: Shape {
-    static var numSamples: Int = 50
     static var values: [CGFloat] = (1...50).map{_ in CGFloat(arc4random())}
     static var magnitudeChart: MagnitudeChart = MagnitudeChart()
     
@@ -130,41 +129,6 @@ struct MagnitudeChart: Shape {
 //        MagnitudeChart.values = waveform
     }
     
-    static func genValues(audioUrl: String) -> Future<[CGFloat], CancellationError> {
-        return Future() { promise in
-            var ind = 0
-            var values = [CGFloat](repeating: .zero, count: numSamples)
-            do {
-                let parser = try AVAudioPlayer(data: Data(contentsOf: NSURL(string: audioUrl)! as URL))
-                parser.isMeteringEnabled = true
-                parser.prepareToPlay()
-                parser.play()
-                parser.volume = 0.0
-                parser.rate = .infinity
-//                print("interval:\(parser.duration/Double(MagnitudeChart.numSamples))")
-                let timer = Timer.scheduledTimer(withTimeInterval: (parser.duration / .infinity)/Double(MagnitudeChart.numSamples), repeats: true) { timer in
-//                    print("AHHHHHHHHHHH")
-                    if ind >= MagnitudeChart.numSamples {
-                        print("Done")
-                        promise(Result.success(values))
-                        timer.invalidate()
-                        return
-                    }
-                    parser.updateMeters()
-                    let avgPows = (0...parser.numberOfChannels).map { num in
-                        CGFloat(parser.averagePower(forChannel: Int(num)))
-                    }
-//                    print(CGFloat(parser.averagePower(forChannel: Int(0))))
-                    values[ind] = avgPows.reduce(0, +) / CGFloat(parser.numberOfChannels)
-                    ind += 1
-                }
-                RunLoop.current.add(timer, forMode: .common)
-            } catch {
-                promise(Result.failure(CancellationError()))
-            }
-        }
-    }
-
     // Don't fully understand but will come back to
     func path(in rect: CGRect) -> Path {
         let maxValue = MagnitudeChart.values.max() ?? 9

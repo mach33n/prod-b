@@ -12,7 +12,7 @@ import Combine
 final class AudioPlayer: AVPlayer, ObservableObject {
     @Published var currTime: Double = 0.0
     static var player: AudioPlayer = AudioPlayer()
-    static var waveParser: AVAudioPlayer? = nil
+    private var loopObserver: NSObjectProtocol? = nil
     private var token: Any?
     private var queue: DispatchQueue = DispatchQueue(label: "trackQueue")
     
@@ -26,30 +26,25 @@ final class AudioPlayer: AVPlayer, ObservableObject {
         initObserver()
     }
     
+    func initLoop() -> Bool {
+        self.loopObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: AudioPlayer.player.currentItem, queue: .main) { _ in
+            AudioPlayer.player.seek(to: CMTime.zero)
+            AudioPlayer.player.play()
+        }
+        return self.loopObserver != nil
+    }
+    
+    func remLoop() -> Bool {
+        NotificationCenter.default.removeObserver(self.loopObserver)
+        return false
+    }
+    
     func initObserver() {
         self.token = self.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main) { [weak self] _ in
             if self?.timeControlStatus == .playing {
                 self?.currTime = self?.currentTime().seconds ?? 0.0
             }
         }
-    }
-    
-    func replaceCurrentItem(with item: AVPlayerItem?, handler: () -> ()) {
-        queue.sync {
-            super.replaceCurrentItem(with: item)
-            let outputSettingsDict: [String : Any] = [
-                    AVFormatIDKey: Int(kAudioFormatLinearPCM),
-                    AVLinearPCMBitDepthKey: 16,
-                    AVLinearPCMIsBigEndianKey: false,
-                    AVLinearPCMIsFloatKey: false,
-                    AVLinearPCMIsNonInterleaved: false
-                ]
-                
-            let readerOutput = AVAssetReaderTrackOutput(track: item!.asset.tracks[0],
-                                                            outputSettings: outputSettingsDict)
-            handler()
-        }
-        
     }
     
     func changeTime(secs: Double) {
@@ -62,5 +57,6 @@ final class AudioPlayer: AVPlayer, ObservableObject {
             self.removeTimeObserver(self.token!)
         }
         self.token = nil
+        AudioPlayer.player.remLoop()
     }
 }
