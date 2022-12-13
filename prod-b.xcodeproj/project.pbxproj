@@ -7,8 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F22B423A289B0CC10081DC34 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = F22B4239289B0CC10081DC34 /* Collections */; };
+		F22B423E289B0CC10081DC34 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F22B423D289B0CC10081DC34 /* OrderedCollections */; };
+		F27A7F1628A348160004E87E /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27A7F1528A348160004E87E /* Button.swift */; };
+		F27A7F1828A3553F0004E87E /* BeatSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27A7F1728A3553F0004E87E /* BeatSpace.swift */; };
+		F27A7F1A28A3618E0004E87E /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27A7F1928A3618E0004E87E /* AudioPlayer.swift */; };
 		F285461D2866921000A99A47 /* prod_bApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285461C2866921000A99A47 /* prod_bApp.swift */; };
-		F285461F2866921000A99A47 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285461E2866921000A99A47 /* ContentView.swift */; };
+		F285461F2866921000A99A47 /* playerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285461E2866921000A99A47 /* playerView.swift */; };
 		F28546212866921300A99A47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F28546202866921300A99A47 /* Assets.xcassets */; };
 		F28546242866921300A99A47 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F28546232866921300A99A47 /* Preview Assets.xcassets */; };
 		F28546262866921300A99A47 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28546252866921300A99A47 /* Persistence.swift */; };
@@ -16,9 +21,15 @@
 		F28546332866921300A99A47 /* prod_bTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28546322866921300A99A47 /* prod_bTests.swift */; };
 		F285463D2866921300A99A47 /* prod_bUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285463C2866921300A99A47 /* prod_bUITests.swift */; };
 		F285463F2866921300A99A47 /* prod_bUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F285463E2866921300A99A47 /* prod_bUITestsLaunchTests.swift */; };
+		F2A4E20D28A7DAEC007A0698 /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A4E20C28A7DAEC007A0698 /* Endpoints.swift */; };
+		F2A4E20F28A86558007A0698 /* Purchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A4E20E28A86558007A0698 /* Purchase.swift */; };
+		F2B4A4ED28A032A20082EDF9 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = F2B4A4EC28A032A20082EDF9 /* Collections */; };
+		F2B4A4EF28A032A20082EDF9 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = F2B4A4EE28A032A20082EDF9 /* DequeModule */; };
+		F2B4A4F128A032A20082EDF9 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F2B4A4F028A032A20082EDF9 /* OrderedCollections */; };
 		F2BEC92C289551A000259B75 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = F2BEC92B289551A000259B75 /* SQLite */; };
 		F2BEC92E2895F99300259B75 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BEC92D2895F99300259B75 /* Storage.swift */; };
 		F2BEC9302896D21300259B75 /* PlayerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BEC92F2896D21300259B75 /* PlayerSlider.swift */; };
+		F2BEC935289AFA4D00259B75 /* initView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BEC934289AFA4D00259B75 /* initView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,9 +50,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F22B424328A018E70081DC34 /* Mont-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Mont-Bold.ttf"; path = "../../../../Downloads/Mont-Bold.ttf"; sourceTree = "<group>"; };
+		F22B424428A0199F0081DC34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F27A7F1528A348160004E87E /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		F27A7F1728A3553F0004E87E /* BeatSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatSpace.swift; sourceTree = "<group>"; };
+		F27A7F1928A3618E0004E87E /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		F28546192866921000A99A47 /* prod-b.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "prod-b.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F285461C2866921000A99A47 /* prod_bApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prod_bApp.swift; sourceTree = "<group>"; };
-		F285461E2866921000A99A47 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F285461E2866921000A99A47 /* playerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = playerView.swift; sourceTree = "<group>"; };
 		F28546202866921300A99A47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F28546232866921300A99A47 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F28546252866921300A99A47 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -51,8 +67,12 @@
 		F28546382866921300A99A47 /* prod-bUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "prod-bUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F285463C2866921300A99A47 /* prod_bUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prod_bUITests.swift; sourceTree = "<group>"; };
 		F285463E2866921300A99A47 /* prod_bUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prod_bUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F2A4E20C28A7DAEC007A0698 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
+		F2A4E20E28A86558007A0698 /* Purchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purchase.swift; sourceTree = "<group>"; };
 		F2BEC92D2895F99300259B75 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		F2BEC92F2896D21300259B75 /* PlayerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSlider.swift; sourceTree = "<group>"; };
+		F2BEC9332897125700259B75 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SQLite.swift; sourceTree = "<group>"; };
+		F2BEC934289AFA4D00259B75 /* initView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = initView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +80,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F22B423A289B0CC10081DC34 /* Collections in Frameworks */,
 				F2BEC92C289551A000259B75 /* SQLite in Frameworks */,
+				F2B4A4F128A032A20082EDF9 /* OrderedCollections in Frameworks */,
+				F2B4A4EF28A032A20082EDF9 /* DequeModule in Frameworks */,
+				F2B4A4ED28A032A20082EDF9 /* Collections in Frameworks */,
+				F22B423E289B0CC10081DC34 /* OrderedCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,11 +106,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F22B424228A018D10081DC34 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F22B424328A018E70081DC34 /* Mont-Bold.ttf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		F27A7F1428A347F80004E87E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F27A7F1528A348160004E87E /* Button.swift */,
+				F27A7F1728A3553F0004E87E /* BeatSpace.swift */,
+				F27A7F1928A3618E0004E87E /* AudioPlayer.swift */,
+				F2BEC92F2896D21300259B75 /* PlayerSlider.swift */,
+				F2A4E20E28A86558007A0698 /* Purchase.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		F27A7F1B28A364220004E87E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				F2BEC92D2895F99300259B75 /* Storage.swift */,
+				F2A4E20C28A7DAEC007A0698 /* Endpoints.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		F28546102866921000A99A47 = {
 			isa = PBXGroup;
 			children = (
 				F285461B2866921000A99A47 /* prod-b */,
 				F28546312866921300A99A47 /* prod-bTests */,
+				F2BEC9332897125700259B75 /* SQLite.swift */,
 				F285463B2866921300A99A47 /* prod-bUITests */,
 				F285461A2866921000A99A47 /* Products */,
 			);
@@ -104,14 +159,17 @@
 		F285461B2866921000A99A47 /* prod-b */ = {
 			isa = PBXGroup;
 			children = (
+				F27A7F1B28A364220004E87E /* API */,
+				F27A7F1428A347F80004E87E /* Components */,
+				F22B424428A0199F0081DC34 /* Info.plist */,
+				F22B424228A018D10081DC34 /* fonts */,
 				F285461C2866921000A99A47 /* prod_bApp.swift */,
-				F285461E2866921000A99A47 /* ContentView.swift */,
+				F285461E2866921000A99A47 /* playerView.swift */,
 				F28546202866921300A99A47 /* Assets.xcassets */,
 				F28546252866921300A99A47 /* Persistence.swift */,
 				F28546272866921300A99A47 /* prod_b.xcdatamodeld */,
 				F28546222866921300A99A47 /* Preview Content */,
-				F2BEC92D2895F99300259B75 /* Storage.swift */,
-				F2BEC92F2896D21300259B75 /* PlayerSlider.swift */,
+				F2BEC934289AFA4D00259B75 /* initView.swift */,
 			);
 			path = "prod-b";
 			sourceTree = "<group>";
@@ -159,6 +217,11 @@
 			name = "prod-b";
 			packageProductDependencies = (
 				F2BEC92B289551A000259B75 /* SQLite */,
+				F22B4239289B0CC10081DC34 /* Collections */,
+				F22B423D289B0CC10081DC34 /* OrderedCollections */,
+				F2B4A4EC28A032A20082EDF9 /* Collections */,
+				F2B4A4EE28A032A20082EDF9 /* DequeModule */,
+				F2B4A4F028A032A20082EDF9 /* OrderedCollections */,
 			);
 			productName = "prod-b";
 			productReference = F28546192866921000A99A47 /* prod-b.app */;
@@ -234,6 +297,8 @@
 			mainGroup = F28546102866921000A99A47;
 			packageReferences = (
 				F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */,
+				F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				F2B4A4EB28A032A20082EDF9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = F285461A2866921000A99A47 /* Products */;
 			projectDirPath = "";
@@ -279,10 +344,16 @@
 			files = (
 				F28546262866921300A99A47 /* Persistence.swift in Sources */,
 				F28546292866921300A99A47 /* prod_b.xcdatamodeld in Sources */,
-				F285461F2866921000A99A47 /* ContentView.swift in Sources */,
+				F2BEC935289AFA4D00259B75 /* initView.swift in Sources */,
+				F27A7F1628A348160004E87E /* Button.swift in Sources */,
+				F27A7F1828A3553F0004E87E /* BeatSpace.swift in Sources */,
+				F285461F2866921000A99A47 /* playerView.swift in Sources */,
 				F285461D2866921000A99A47 /* prod_bApp.swift in Sources */,
+				F27A7F1A28A3618E0004E87E /* AudioPlayer.swift in Sources */,
+				F2A4E20F28A86558007A0698 /* Purchase.swift in Sources */,
 				F2BEC92E2895F99300259B75 /* Storage.swift in Sources */,
 				F2BEC9302896D21300259B75 /* PlayerSlider.swift in Sources */,
+				F2A4E20D28A7DAEC007A0698 /* Endpoints.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,11 +516,14 @@
 				DEVELOPMENT_TEAM = A24WQ4F927;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "prod-b/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -460,7 +534,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -475,11 +549,14 @@
 				DEVELOPMENT_TEAM = A24WQ4F927;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "prod-b/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -490,7 +567,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -608,6 +685,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		F2B4A4EB28A032A20082EDF9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
@@ -619,6 +712,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F22B4239289B0CC10081DC34 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		F22B423D289B0CC10081DC34 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		F2B4A4EC28A032A20082EDF9 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		F2B4A4EE28A032A20082EDF9 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		F2B4A4F028A032A20082EDF9 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F22B4238289B0CC10081DC34 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
 		F2BEC92B289551A000259B75 /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F2BEC92A289551A000259B75 /* XCRemoteSwiftPackageReference "SQLite" */;

@@ -15,8 +15,8 @@ import Collections
 struct DataStore {
     
     var db: Connection? = nil
-    var table: Table
-    var imageTable: Table
+    var table: SQLite.Table
+    var imageTable: SQLite.Table
     
     // Columns for tables
     let id = Expression<String>("id")

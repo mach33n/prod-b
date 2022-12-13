@@ -40,7 +40,7 @@ struct Square: View {
                                     if SongSquare.current != nil {
                                         SongSquare.current?.selectSquare()
                                     }
-//                                    AudioPlayer.player.replaceCurrentItem(with: songSquare.getAVPlayerItem())
+                                    AudioPlayer.player.replaceCurrentItem(with: songSquare.getAVPlayerItem())
                                     AudioPlayer.player.play()
                                     SongSquare.current = songSquare
                                     songSquare.selectSquare()
@@ -139,24 +139,43 @@ class SongSquare : ObservableObject, Equatable, Hashable {
     
     init(res: SquareRes) {
         self.key = res._id
-        self.point = CGPoint(x: res.happyScore, y: res.aggScore)
+        self.point = CGPoint(x: res.happyScore * UIScreen.screenWidth, y: res.aggScore*UIScreen.screenHeight)
         self.size = CGSize(width: 50, height: 50)
         self.selected = false
         self.trackName = res.trackName
         self.producerName = res.producerName
         self.audioUrl = res.audioUrl.absoluteString
+        self.waveValues = res.waveform
+        let img = UIImage(named: "sample_art_cover")
+        self.avgColor = img?.averageColor ?? Color(.sRGB, white: 0.1, opacity: 0.9)
+        self.image = Image("sample_art_cover").resizable()
         do {
-            let url = URL(string: res.imageUrl.absoluteString)
-            let data = try Data(contentsOf: url!)
-            let img = UIImage(data: data)
-            self.avgColor = img?.averageColor ?? Color(.sRGB, white: 0.1, opacity: 0.9)
-            self.image = Image(uiImage: img!).resizable()
+            let url = URL(string: res.imageUrl.absoluteString)!
+            print("Download Started")
+            try SongSquare.getData(from: url) { data, response, error in
+                guard let data = data, error == nil else { return }
+                print(response?.suggestedFilename ?? url.lastPathComponent)
+                print("Download Finished")
+                Task {
+//                    let data = try Data(contentsOf: url)
+                    // always update the UI from the main thread
+                    DispatchQueue.main.async() { [weak self] in
+                        let img = UIImage(data: data)
+                        self?.avgColor = img?.averageColor ?? Color(.sRGB, white: 0.1, opacity: 0.9)
+                        self?.image = Image(uiImage: img!).resizable()
+                    }
+                }
+            }
         } catch {
             let img = UIImage(named: "sample_art_cover")
             self.avgColor = img?.averageColor ?? Color(.sRGB, white: 0.1, opacity: 0.9)
             self.image = Image("sample_art_cover").resizable()
         }
-        self.waveValues = res.waveform
+        
+    }
+    
+    static func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) throws {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
     // MARK: - SongSquare modification methods
@@ -252,20 +271,15 @@ class SongSpace : ObservableObject {
     // Need to connect to some datastore
     @Published var squares =  OrderedDictionary<String, SongSquare>()
     @Published var buffer = OrderedDictionary<String, SongSquare>()
+    var offset: CGSize = CGSize.zero
     private var store = DataStore()
     private var c: AnyCancellable?
     
     init() {
         subscribeToChanges()
-        NotificationCenter.default.addObserver(self.buffer, selector: #selector(updateSquares), name: NSNotification.Name ("com.user.login.success"), object: nil)
-        self.pullSquares()
-        self.update(change: BeatSpace.cursor.toCGSize())
+        self.update(changelocal: CGSize.zero, changebuffer: CGSize.zero)
+        self.update(change: CGSize.zero)
     }
-    
-    @objc func updateSquares() {
-        print("Update")
-    }
-    
     
     func pullSquares() {
         let body: SquareReq = SquareReq(axis1: "happy", axis2: "aggressive", limit: 5)
@@ -301,6 +315,7 @@ class SongSpace : ObservableObject {
     }
     
     func update(changelocal: CGSize, changebuffer: CGSize) {
+        self.pullSquares()
         self.updateLocal(change: changelocal)
         self.updateBuffer(change: changebuffer)
     }
@@ -353,21 +368,24 @@ class SongSpace : ObservableObject {
 struct BeatSpace: View {
     @State private var space: SongSpace = SongSpace()
     @State private var prevTrans = CGSize(width: 0, height: 0)
-    @State static var cursor: CGPoint = CGPoint.zero
+    @State var cursor: CGPoint = CGPoint.zero
     @State var purchasing: Bool = false
     
     var body: some View {
-        ZStack {
+        VStack {
             GeometryReader { globPos in
                 RoundedRectangle(cornerRadius: 10.0)
                     .frame(width: 20.0, height: 20.0, alignment: .center)
-                    .offset(x: BeatSpace.cursor.x, y: BeatSpace.cursor.y)
+                    .offset(x: cursor.x, y: cursor.y)
                     .foregroundStyle(.red)
-                ForEach(space.squares.values, id: \.self) { square in
-                    withAnimation {
-                        Square(purchasing: $purchasing)
-                            .frame(width: square.size.width, height: square.size.height, alignment: .center)
-                            .environmentObject(square)
+                VStack(spacing: 3) {
+                    ForEach(space.squares.values, id: \.self) { square in
+                        withAnimation {
+                            Square(purchasing: $purchasing)
+                                .frame(width: square.size.width, height: square.size.height, alignment: .center)
+                                .environmentObject(square)
+                                .zIndex(2)
+                        }
                     }
                 }
             }
@@ -376,24 +394,27 @@ struct BeatSpace: View {
             .frame(width: UIScreen.screenWidth, height: 3*UIScreen.screenHeight/4, alignment: .topLeading)
             .onAppear(perform: {
                 // Update view with new squares
-                space.update(changelocal: BeatSpace.cursor.toCGSize(), changebuffer: BeatSpace.cursor.toCGSize())
-                BeatSpace.cursor = CGPoint(x: PlayerView.geoReadDim.width/2, y: PlayerView.geoReadDim.height/2)
+                cursor = CGPoint(x: PlayerView.geoReadDim.width/2, y: PlayerView.geoReadDim.height/2)
+                space.offset = PlayerView.geoReadDim
+                space.update(changelocal: cursor.toCGSize(), changebuffer: cursor.toCGSize())
             })
             .gesture(
                 DragGesture()
                     .onChanged({ offsetChange in
-                        let diff = offsetChange.translation - prevTrans
-                        var change = CGSize(width: diff.width, height: diff.height)
-                        change = asymDrag(change: change)
-                        
-                        // Update view with new squares
-                        space.update(change: change)
-                        
-                        //Update cursor for ref
-                        BeatSpace.cursor = BeatSpace.cursor + change.toCGPoint()
-                        
-                        // Keep track of total space change
-                        prevTrans = offsetChange.translation
+                        if !self.purchasing {
+                            let diff = offsetChange.translation - prevTrans
+                            var change = CGSize(width: diff.width, height: diff.height)
+                            change = asymDrag(change: change)
+                            
+                            // Update view with new squares
+                            space.update(change: change)
+                            
+                            //Update cursor for ref
+                            cursor = cursor + change.toCGPoint()
+                            
+                            // Keep track of total space change
+                            prevTrans = offsetChange.translation
+                        }
                     })
             )
             .onTapGesture {
@@ -411,12 +432,12 @@ struct BeatSpace: View {
                 LinearGradient(stops: [.init(color: .blue, location: 0.4), .init(color: .red, location: 0.6)], startPoint: UnitPoint(x: 0.0, y: 0.0), endPoint: UnitPoint(x: 0.0, y: 1.0))
                     .frame(width: UIScreen.screenWidth*2, height: UIScreen.screenHeight*5, alignment: .center)
                     .position(x: UIScreen.screenWidth/2, y: 0.0)
-                    .offset(x: 0.0, y: BeatSpace.cursor.y.clamped(to: -PlayerView.geoReadDim.height/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.height/2))
+                    .offset(x: 0.0, y: cursor.y.clamped(to: -PlayerView.geoReadDim.height/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.height/2))
                 LinearGradient(stops: [.init(color: .green, location: 0.4), .init(color: .indigo, location: 0.6)], startPoint: .leading, endPoint: .trailing)
                     .blendMode(BlendMode.exclusion)
                     .frame(width: UIScreen.screenWidth*5, height: UIScreen.screenHeight*2, alignment: .center)
                     .position(x: 0.0, y: UIScreen.screenHeight/2)
-                    .offset(x: BeatSpace.cursor.x.clamped(to: -PlayerView.geoReadDim.width/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.width/2), y: 0.0)
+                    .offset(x: cursor.x.clamped(to: -PlayerView.geoReadDim.width/2...UIScreen.screenWidth*5-PlayerView.geoReadDim.width/2), y: 0.0)
             }.frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
         )
     }

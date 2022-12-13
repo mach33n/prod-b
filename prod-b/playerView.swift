@@ -66,7 +66,6 @@ struct PlayerView: View {
     
     var body: some View {
         let background = Color(red: 0.07, green: 0.07, blue: 0.12)
-        ZStack {
             VStack {
                 space
                 VStack {
@@ -99,8 +98,6 @@ struct PlayerView: View {
                 .background(Color(.sRGB, white: 0.1, opacity: 1.0))
             }
             .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
-        }
-        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight, alignment: .center)
     }
     
     func updatePurchase() {
